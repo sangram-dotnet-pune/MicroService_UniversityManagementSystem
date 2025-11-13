@@ -1,25 +1,35 @@
+﻿using Ocelot.DependencyInjection;
+using Ocelot.Middleware;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Load Ocelot configuration
+builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
 
+// Add services to the container
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Register Ocelot services
+builder.Services.AddOcelot();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Optional: HTTPS redirection if your downstreams use HTTPS
+// app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
 app.MapControllers();
+
+// ✅ This line actually enables the Ocelot Gateway routing
+await app.UseOcelot();
 
 app.Run();
