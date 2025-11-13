@@ -35,6 +35,9 @@ namespace StudentService.Controllers
 
             if (enrollmentDTO == null) return BadRequest("not data");
 
+            var student =await  _context.Enrollments.FirstOrDefaultAsync(x=>x.StudentId==enrollmentDTO.StudentId);
+            if (student != null) return BadRequest($"Student with id {enrollmentDTO.StudentId} already exits");
+
             var course = await _studentClientService.GetCourseByIdAsync(enrollmentDTO.CourseId);
 
             if (course == null) return NotFound("No Course Found");

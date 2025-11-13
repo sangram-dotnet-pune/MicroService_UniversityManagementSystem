@@ -9,8 +9,16 @@ namespace StudentService.Service
 
         public  async Task<Course?> GetCourseByIdAsync(int id)
         {
-          
-            return await client.GetFromJsonAsync<Course>($"/Course/{id}");
+            try
+            {
+                return await client.GetFromJsonAsync<Course>($"/Course/{id}");
+
+            }
+
+            catch(Exception ex)
+            {
+                return null;
+            }
         }
 
 
